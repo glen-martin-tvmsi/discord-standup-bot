@@ -1,0 +1,4 @@
+#PROJECT_CONTEXT v1.9
+[2025-03-03T15:54:48+0000] [CTX_DEBUG] Capturing hardware specs
+##HARDWARE
+[CTX_ERR-127] Failure at line 46

@@ -1,4 +1,23 @@
 #!/bin/bash
+# updates/update-1.10.sh - Resilient Context Builder v1.10
+
+set -Eeuo pipefail
+trap '_handle_error $? $LINENO' ERR
+
+VERSION="1.10"
+CONTEXT_SCRIPT="scripts/ai_search.sh"
+CONTEXT_FILE="project_context.txt"
+LOG_DIR="logs/project_scan"
+DEBUG_LOG="$LOG_DIR/context_builder.log"
+
+_handle_error() {
+    echo "[ERR-$1] Update failed at line $2" | tee -a "$DEBUG_LOG"
+    exit $1
+}
+
+_update_context_script() {
+    cat > "$CONTEXT_SCRIPT" <<'EOL'
+#!/bin/bash
 # AI Context Crawler v1.10
 
 set -Eeuo pipefail
@@ -134,3 +153,63 @@ _main() {
 }
 
 _main
+EOL
+}
+
+_update_documentation() {
+    cat >> README.md <<'EOL'
+
+## AI Context Builder v1.10+
+
+### Error Code Mapping
+| Code | Description | Category |
+|------|-------------|----------|
+| E101 | Missing command | Dependency |
+| E201 | Insufficient VRAM | Hardware |
+| E203 | Missing GPU | Hardware |
+| E301 | Missing model | AI Config |
+| E401 | Encryption issue | Security |
+
+### Report Format
+#PROJECT_CONTEXT v1.10
+##META|<unix_ts>|<git_ref>
+##DEPCHECK
+DEP|<status>|<command>|<code>
+##HARDWARE
+GPU|<name>|<driver>|<vram>
+##INFRA
+DIR|<name>|<file_count>
+##ISSUES
+ISSUE|<code>|<description>
+
+text
+
+### Usage
+Generate context with full diagnostics
+./scripts/ai_search.sh
+
+Check for critical errors
+grep 'ISSUE|E[2-3]' project_context.txt
+
+text
+EOL
+}
+
+# Main execution flow
+{
+    mkdir -p "$LOG_DIR"
+    echo "[UPDATE] Starting v$VERSION deployment" | tee -a "$DEBUG_LOG"
+    
+    _update_context_script
+    _update_documentation
+    
+    chmod +x "$CONTEXT_SCRIPT"
+    git add -A
+    git commit -m "System v$VERSION - Resilient Context" \
+              -m "- Comprehensive dependency checks" \
+              -m "- Hardware validation suite" \
+              -m "- AI model verification" \
+              -m "- Error code standardization"
+    
+    echo "[SUCCESS] Update v$VERSION completed" | tee -a "$DEBUG_LOG"
+}

@@ -129,3 +129,37 @@ Monitor GPU utilization
 nvidia-smi -l 5 --query-gpu=utilization.gpu --format=csv
 
 text
+
+## AI Context Builder v1.10+
+
+### Error Code Mapping
+| Code | Description | Category |
+|------|-------------|----------|
+| E101 | Missing command | Dependency |
+| E201 | Insufficient VRAM | Hardware |
+| E203 | Missing GPU | Hardware |
+| E301 | Missing model | AI Config |
+| E401 | Encryption issue | Security |
+
+### Report Format
+#PROJECT_CONTEXT v1.10
+##META|<unix_ts>|<git_ref>
+##DEPCHECK
+DEP|<status>|<command>|<code>
+##HARDWARE
+GPU|<name>|<driver>|<vram>
+##INFRA
+DIR|<name>|<file_count>
+##ISSUES
+ISSUE|<code>|<description>
+
+text
+
+### Usage
+Generate context with full diagnostics
+./scripts/ai_search.sh
+
+Check for critical errors
+grep 'ISSUE|E[2-3]' project_context.txt
+
+text
