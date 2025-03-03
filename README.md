@@ -221,3 +221,23 @@ python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
 ffmpeg -hwaccels | Select-String 'cuda'
 
 text
+
+## VS Code Configuration (v1.14+)
+
+### Recommended Setup
+1. Install [VS Code](https://code.visualstudio.com/)
+2. Open the project folder
+3. Accept extension recommendations when prompted
+
+### Key Features
+- Preconfigured Python environment paths
+- Integrated debugging profiles
+- AI-assisted development (GitHub Copilot)
+- Auto-formatting with Black
+- Linting with Pylance/Ruff
+
+### Debugging
+- **Discord Bot**: F5 to start with production settings
+- **AI Pipeline**: Test runner configuration
+- **Full System**: Launch all components
+
