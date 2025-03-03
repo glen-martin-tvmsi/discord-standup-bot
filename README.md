@@ -241,3 +241,24 @@ text
 - **AI Pipeline**: Test runner configuration
 - **Full System**: Launch all components
 
+
+## Linux VSCode Setup (v1.15+)
+
+### Configuration Features
+- Python virtual environment integration
+- Pylance/Ruff language server setup
+- Preconfigured debug profiles
+- Git-ignored temporary files
+
+### First-Time Setup
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+text
+
+### Recommended Workflow
+1. Open workspace: `code discord-standup-bot.code-workspace`
+2. Install recommended extensions
+3. Select Python interpreter (Ctrl+Shift+P > "Python: Select Interpreter")
+4. Start debugging with F5

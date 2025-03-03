@@ -2,32 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Discord Bot",
+            "name": "Python: Bot Main",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/src/bot/main.py",
-            "args": ["--production"],
+            "args": ["--env", "development"],
             "console": "integratedTerminal",
-            "justMyCode": false,
-            "envFile": "${workspaceFolder}/.env",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": "start-services"
-        },
-        {
-            "name": "Python: AI Pipeline",
-            "type": "python",
-            "request": "launch",
-            "module": "pytest",
-            "args": ["tests/"],
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
-            }
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Full System",
-            "configurations": ["Python: Discord Bot", "Python: AI Pipeline"]
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

@@ -1,0 +1,15 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "Discord Standup Bot"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/.git": true,
+            "**/.venv": true,
+            "**/__pycache__": true
+        }
+    }
+}
