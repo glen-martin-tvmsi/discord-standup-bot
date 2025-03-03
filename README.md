@@ -70,3 +70,40 @@ BUILD_OUT|<count>
 
 text
 
+
+## AI Context Builder v1.8+
+
+### Machine-Readable Format
+#PROJECT_CONTEXT v1.8
+##META|<unix_ts>|<git_ref>
+##DIRTREE
+DIR|<path>|<file_count>|<size>
+##DEPS
+<type>|<name>|<version>
+##SCRIPTS
+SCRIPT|<path>|<version>|<log_count>|<gpu_usage>
+##CONFIG
+CFG|<path>|<mime_type>|<validation>
+##TESTS
+PYTEST|<count>|<cases>|<coverage>
+##ERRORS
+<type>|<message>
+##ARTIFACTS
+ARTIFACT|<path>|<size>|<md5>
+### Usage
+Generate context (outputs to project_context.txt)
+./scripts/ai_search.sh
+
+Validate context format
+file project_context.txt | grep 'ASCII text'
+
+text
+
+### Monitoring
+Watch context generation
+tail -f logs/project_scan/context_builder.log
+
+Verify artifact integrity
+md5sum project_context.txt
+
+text

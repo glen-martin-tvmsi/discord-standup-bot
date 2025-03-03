@@ -1,4 +1,24 @@
 #!/bin/bash
+# updates/update-1.8.sh - Enhanced Context Builder v1.8
+
+set -Eeuo pipefail
+trap '_error_handler $LINENO' ERR
+
+VERSION="1.8"
+CONTEXT_SCRIPT="scripts/ai_search.sh"
+CONTEXT_FILE="project_context.txt"
+LOG_DIR="logs/project_scan"
+DEBUG_LOG="$LOG_DIR/context_builder.log"
+
+_error_handler() {
+    local line=$1
+    echo "[ERR] Update failed at line $line - Check $DEBUG_LOG" >&2
+    exit 1
+}
+
+_create_context_script() {
+    cat > "$CONTEXT_SCRIPT" <<'EOL'
+#!/bin/bash
 # AI Context Crawler v1.8
 
 set -Eeuo pipefail
@@ -84,3 +104,71 @@ _main() {
 }
 
 _main
+EOL
+}
+
+_update_documentation() {
+    cat >> README.md <<'EOL'
+
+## AI Context Builder v1.8+
+
+### Machine-Readable Format
+#PROJECT_CONTEXT v1.8
+##META|<unix_ts>|<git_ref>
+##DIRTREE
+DIR|<path>|<file_count>|<size>
+##DEPS
+<type>|<name>|<version>
+##SCRIPTS
+SCRIPT|<path>|<version>|<log_count>|<gpu_usage>
+##CONFIG
+CFG|<path>|<mime_type>|<validation>
+##TESTS
+PYTEST|<count>|<cases>|<coverage>
+##ERRORS
+<type>|<message>
+##ARTIFACTS
+ARTIFACT|<path>|<size>|<md5>
+### Usage
+Generate context (outputs to project_context.txt)
+./scripts/ai_search.sh
+
+Validate context format
+file project_context.txt | grep 'ASCII text'
+
+text
+
+### Monitoring
+Watch context generation
+tail -f logs/project_scan/context_builder.log
+
+Verify artifact integrity
+md5sum project_context.txt
+
+text
+EOL
+}
+
+# Main update sequence
+mkdir -p "$LOG_DIR"
+{
+echo "[UPDATE] Starting v$VERSION deployment"
+_create_context_script
+chmod +x "$CONTEXT_SCRIPT"
+_update_documentation
+
+# Validate components
+[[ -x "$CONTEXT_SCRIPT" ]] || { echo "[UPDATE_ERR] Missing executable permissions"; exit 1; }
+[[ -f "README.md" ]] || { echo "[UPDATE_ERR] Missing README"; exit 1; }
+
+# Commit changes
+git add -A
+git commit -m "System v$VERSION - Enhanced Context" \
+          -m "- Hardware-aware scanning" \
+          -m "- Artifact fingerprinting" \
+          -m "- Coverage tracking" \
+          -m "- JSON validation"
+
+echo "[UPDATE_SUCCESS] v$VERSION installed"
+echo "Next: Generate context with './scripts/ai_search.sh'"
+} > "$DEBUG_LOG" 2>&1
