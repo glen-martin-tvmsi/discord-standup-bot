@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# update-1.4.sh - Ensures ai_feedback.sh is created in the scripts directory and added to Git.
+
+echo "Starting update 1.4: Creating ai_feedback.sh script in the scripts directory..."
+
+# Step 1: Ensure the scripts directory exists
+SCRIPTS_DIR="scripts"
+if [ ! -d "$SCRIPTS_DIR" ]; then
+    echo "Scripts directory not found. Creating $SCRIPTS_DIR..."
+    mkdir -p "$SCRIPTS_DIR"
+fi
+
+# Step 2: Create or overwrite the ai_feedback.sh script
+AI_FEEDBACK_SCRIPT="$SCRIPTS_DIR/ai_feedback.sh"
+echo "Creating or updating $AI_FEEDBACK_SCRIPT..."
+
+cat << 'EOF' > $AI_FEEDBACK_SCRIPT
+#!/bin/bash
+
+# ai_feedback.sh - A script to assist in debugging and issue tracking for the Discord Standup Bot project.
+# This script leverages Python tools, logging, and AI-based analysis to identify and resolve issues.
+
+# Define the log directory and file
+LOG_DIR="logs"
+LOG_FILE="$LOG_DIR/ai_feedback.log"
+
+# Ensure the log directory exists
+mkdir -p $LOG_DIR
+
+# Function to check Python environment
+check_python_env() {
+    echo "Checking Python environment..." | tee -a $LOG_FILE
+    python3 --version &>> $LOG_FILE || { echo "Python3 is not installed. Please install Python3." | tee -a $LOG_FILE; exit 1; }
+    pip --version &>> $LOG_FILE || { echo "Pip is not installed. Please install Pip." | tee -a $LOG_FILE; exit 1; }
+    echo "Python environment is set up correctly." | tee -a $LOG_FILE
+}
+
+# Function to run static code analysis
+run_static_analysis() {
+    echo "Running static code analysis with pylint..." | tee -a $LOG_FILE
+    pip install pylint --quiet &>> $LOG_FILE
+    pylint src/ &>> $LOG_FILE || echo "Static analysis completed with warnings/errors. Check $LOG_FILE for details." | tee -a $LOG_FILE
+}
+
+# Function to run unit tests
+run_unit_tests() {
+    echo "Running unit tests with pytest..." | tee -a $LOG_FILE
+    pip install pytest --quiet &>> $LOG_FILE
+    pytest tests/ --disable-warnings &>> $LOG_FILE || echo "Unit tests completed with failures. Check $LOG_FILE for details." | tee -a $LOG_FILE
+}
+
+# Function to check for dependency issues
+check_dependencies() {
+    echo "Checking for dependency issues..." | tee -a $LOG_FILE
+    pip check &>> $LOG_FILE || echo "Dependency issues found. Check $LOG_FILE for details." | tee -a $LOG_FILE
+}
+
+# Function to analyze logs for errors
+analyze_logs() {
+    echo "Analyzing logs for errors..." | tee -a $LOG_FILE
+    if [ -f system.log ]; then
+        grep -i "error" system.log &>> $LOG_FILE || echo "No errors found in system.log." | tee -a $LOG_FILE
+    else
+        echo "system.log file not found. Skipping log analysis." | tee -a $LOG_FILE
+    fi
+}
+
+# Main script execution
+main() {
+    echo "Starting AI Feedback Script..." | tee -a $LOG_FILE
+    check_python_env
+    run_static_analysis
+    run_unit_tests
+    check_dependencies
+    analyze_logs
+    echo "AI Feedback Script completed. Check $LOG_FILE for detailed output." | tee -a $LOG_FILE
+}
+
+main
+
+EOF
+
+chmod +x "$AI_FEEDBACK_SCRIPT"
+
+# Step 3: Add the new script to Git and commit changes.
+echo "Adding ai_feedback.sh to Git..."
+git add "$AI_FEEDBACK_SCRIPT"
+
+echo "Committing changes..."
+git commit -m "Add ai_feedback.sh script (update-1.4)"
+
+echo "Update 1.4 completed successfully! The ai_feedback.sh script has been added."

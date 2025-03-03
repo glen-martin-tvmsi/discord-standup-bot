@@ -1,0 +1,17 @@
+{
+  "discord_token": "YOUR_BOT_TOKEN_HERE",
+  "recording_settings": {
+    "quality": "720p",
+    "bitrate": "96k",
+    "max_duration": 3600
+  },
+  "ai_models": {
+    "transcription": "WhisperMedium.en",
+    "summarization": "Mistral-7B-Q4"
+  },
+  "output_formats": {
+    "audio": "wav",
+    "transcript": "txt",
+    "summary": "md"
+  }
+}
