@@ -178,3 +178,46 @@ Test context generation
 rm -rf logs/project_scan && ./scripts/ai_search.sh
 
 text
+
+## Windows 11 RTX 3070 Setup (v1.12+)
+
+### Hardware Requirements
+- CPU: AMD Ryzen 5600X
+- GPU: NVIDIA RTX 3070 (8GB VRAM)
+- Driver: 516.94+
+- RAM: 16GB DDR4
+
+### Features
+- CUDA 11.7 optimized for RTX 30-series
+- DirectML acceleration for Whisper
+- Hardware-accelerated FFmpeg
+- Torch 2.0 with CUDA 11.7
+
+### Verification Commands
+nvidia-smi
+python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+ffmpeg -hwaccels
+
+text
+
+## Windows 11 RTX 3070 Setup (v1.13+)
+
+### System Requirements
+- OS: Windows 11 22H2+
+- CPU: AMD Ryzen 5600X
+- GPU: NVIDIA RTX 3070 (8GB VRAM)
+- Driver: 516.94+
+- RAM: 16GB DDR4
+
+### Features
+- Automatic CUDA 11.7 installation
+- Hardware-accelerated media processing
+- Pre-configured Python environment
+- NVIDIA GPU verification
+
+### Verification Commands
+nvidia-smi
+python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+ffmpeg -hwaccels | Select-String 'cuda'
+
+text
