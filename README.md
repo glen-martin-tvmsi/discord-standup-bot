@@ -32,3 +32,41 @@ text
    - Minimum (RTX 2060): Whisper Tiny + Mistral-7B
    - Recommended (RTX 3070): Whisper Medium + Mistral-7B-Q4
 
+
+## Logging Architecture (v1.6+)
+- **Unified Format**: `[YYYY-MM-DDTHH:MM:SS+TZ] [LEVEL] Message`
+- **Log Files**:
+  - `update.log`: System update records
+  - `setup.log`: Environment configuration
+  - `build.log`: Compilation outputs  
+  - `test.log`: Validation results
+  - `deploy.log`: Service management
+  - `aifeedback.log`: Diagnostic reports
+
+
+## AI Context Builder (v1.7+)
+
+Generate project snapshot
+bash scripts/ai_search.sh
+
+Output format:
+#PROJECT_CONTEXT v1.7
+##META|<unix_ts>|<git_sha>
+##DIRTREE
+DIR|<path>|<file_count>
+##DEPS
+<dependency_line>
+##SCRIPTS
+SCRIPT|<path>|<desc>|<version>|<log_lines>
+##CONFIG
+CFG|<file>|<type>
+##TESTS
+PYTEST|<count>
+CASES|<count>
+##ERRORS
+<error_line>
+##ARTIFACTS
+BUILD_OUT|<count>
+
+text
+
