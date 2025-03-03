@@ -163,3 +163,18 @@ Check for critical errors
 grep 'ISSUE|E[2-3]' project_context.txt
 
 text
+
+## Update v1.11 Fixes
+
+### Error Code Enhancements
+- E101: Missing required command (aligned with ai_feedback.sh checks)
+- E103: Missing directory (matches update-1.4 infrastructure requirements)
+
+### Verification Command
+Check for unbound variables
+bash -n scripts/ai_search.sh
+
+Test context generation
+rm -rf logs/project_scan && ./scripts/ai_search.sh
+
+text

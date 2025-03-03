@@ -1,4 +1,22 @@
 #!/bin/bash
+# updates/update-1.11.sh - Logging System Fix v1.11
+
+set -Eeuo pipefail
+trap '_handle_error $? $LINENO' ERR
+
+VERSION="1.11"
+CONTEXT_SCRIPT="scripts/ai_search.sh"
+LOG_DIR="logs/project_scan"
+DEBUG_LOG="$LOG_DIR/context_builder.log"
+
+_handle_error() {
+    echo "[ERR-$1] Update failed at line $2" | tee -a "$DEBUG_LOG"
+    exit $1
+}
+
+_update_context_script() {
+    cat > "$CONTEXT_SCRIPT" <<'EOL'
+#!/bin/bash
 # AI Context Crawler v1.11
 
 set -Eeuo pipefail
@@ -87,3 +105,44 @@ _main() {
 }
 
 _main
+EOL
+}
+
+_update_documentation() {
+    cat >> README.md <<'EOL'
+
+## Update v1.11 Fixes
+
+### Error Code Enhancements
+- E101: Missing required command (aligned with ai_feedback.sh checks)
+- E103: Missing directory (matches update-1.4 infrastructure requirements)
+
+### Verification Command
+Check for unbound variables
+bash -n scripts/ai_search.sh
+
+Test context generation
+rm -rf logs/project_scan && ./scripts/ai_search.sh
+
+text
+EOL
+}
+
+# Main execution
+{
+    mkdir -p "$LOG_DIR"
+    echo "[UPDATE] Starting v$VERSION deployment" | tee -a "$DEBUG_LOG"
+    
+    _update_context_script
+    _update_documentation
+    
+    chmod +x "$CONTEXT_SCRIPT"
+    git add -A
+    git commit -m "System v$VERSION - Logging Fix" \
+              -m "- Fixed unbound LOG_DIR variable" \
+              -m "- Enhanced environment validation" \
+              -m "- AI feedback compatibility" \
+              -m "- Error code alignment"
+    
+    echo "[SUCCESS] Update v$VERSION completed" | tee -a "$DEBUG_LOG"
+}
