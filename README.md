@@ -107,3 +107,25 @@ Verify artifact integrity
 md5sum project_context.txt
 
 text
+
+## Logging Architecture v1.9+
+
+### Error Code Mapping
+| Code | Description | Source |
+|------|-------------|--------|
+| 101  | Missing required command | ai_search.sh |
+| 102  | Empty context file | ai_search.sh |
+| E102 | Missing Python venv | aifeedback.sh |
+| E110 | GPU inaccessible | aifeedback.sh |
+
+### Debugging Commands
+Full system check
+./scripts/aifeedback.sh
+
+Generate debug context
+DEBUG=1 ./scripts/ai_search.sh
+
+Monitor GPU utilization
+nvidia-smi -l 5 --query-gpu=utilization.gpu --format=csv
+
+text

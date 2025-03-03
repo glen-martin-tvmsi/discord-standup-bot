@@ -1,4 +1,28 @@
 #!/bin/bash
+# updates/update-1.9.sh - Logging System Overhaul v1.9
+
+set -Eeuo pipefail
+trap '_handle_error $? $LINENO' ERR
+
+VERSION="1.9"
+CONTEXT_SCRIPT="scripts/ai_search.sh"
+LOG_DIR="logs/project_scan"
+DEBUG_LOG="$LOG_DIR/context_builder.log"
+
+_handle_error() {
+    local exit_code=$1 line=$2
+    echo "[ERR-$exit_code] Update failed at line $line" | tee -a "$DEBUG_LOG"
+    exit $exit_code
+}
+
+_install_requirements() {
+    echo "Installing logging dependencies..." | tee -a "$DEBUG_LOG"
+    pip install -q --upgrade psutil loguru | tee -a "$DEBUG_LOG"
+}
+
+_update_context_script() {
+    cat > "$CONTEXT_SCRIPT" <<'EOL'
+#!/bin/bash
 # AI Context Crawler v1.9
 
 set -Eeuo pipefail
@@ -89,3 +113,54 @@ _main() {
 }
 
 _main
+EOL
+}
+
+_update_documentation() {
+    cat >> README.md <<'EOL'
+
+## Logging Architecture v1.9+
+
+### Error Code Mapping
+| Code | Description | Source |
+|------|-------------|--------|
+| 101  | Missing required command | ai_search.sh |
+| 102  | Empty context file | ai_search.sh |
+| E102 | Missing Python venv | aifeedback.sh |
+| E110 | GPU inaccessible | aifeedback.sh |
+
+### Debugging Commands
+Full system check
+./scripts/aifeedback.sh
+
+Generate debug context
+DEBUG=1 ./scripts/ai_search.sh
+
+Monitor GPU utilization
+nvidia-smi -l 5 --query-gpu=utilization.gpu --format=csv
+
+text
+EOL
+}
+
+# Main execution flow
+{
+    mkdir -p "$LOG_DIR"
+    echo "[UPDATE] Starting v$VERSION deployment" | tee -a "$DEBUG_LOG"
+    
+    _install_requirements
+    _update_context_script
+    _update_documentation
+    
+    chmod +x "$CONTEXT_SCRIPT"
+    [[ -x "$CONTEXT_SCRIPT" ]] || exit 201
+    
+    git add -A
+    git commit -m "System v$VERSION - Logging Overhaul" \
+              -m "- Fixed unbound variables" \
+              -m "- Hardware validation" \
+              -m "- Error code mapping" \
+              -m "- AI config alignment"
+    
+    echo "[SUCCESS] Update v$VERSION completed" | tee -a "$DEBUG_LOG"
+} 2>&1 | tee -a "$DEBUG_LOG"
