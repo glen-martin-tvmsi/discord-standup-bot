@@ -262,3 +262,22 @@ text
 2. Install recommended extensions
 3. Select Python interpreter (Ctrl+Shift+P > "Python: Select Interpreter")
 4. Start debugging with F5
+
+## Windows Setup Troubleshooting (v1.16+)
+
+### Log File Location
+`logs/windows/setup-<date>-<time>.log`
+
+### Common Errors
+| Error Code | Description | Solution |
+|-----------|-------------|----------|
+| E101 | Python download failed | Check internet connection |
+| E102 | CUDA install failed | Verify driver version ≥516.94 |
+| E103 | Virtual env creation | Delete existing .venv directory |
+
+### Verbose Logging Features
+- Timestamped operation tracking
+- Full package install output
+- Error code capture
+- Environment verification
+

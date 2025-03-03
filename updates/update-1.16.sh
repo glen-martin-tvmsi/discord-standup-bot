@@ -1,3 +1,21 @@
+#!/bin/bash
+# updates/update-1.16.sh - Windows Setup Logging v1.16
+
+set -Eeuo pipefail
+trap '_handle_error $? $LINENO' ERR
+
+VERSION="1.16"
+WIN_SCRIPT="scripts/setup.bat"
+LOG_DIR="logs/windows"
+DEBUG_LOG="$LOG_DIR/update-1.16.log"
+
+_handle_error() {
+    echo "[ERR-$1] Update failed at line $2" | tee -a "$DEBUG_LOG"
+    exit $1
+}
+
+_update_setup_script() {
+    cat > "$WIN_SCRIPT" <<'EOL'
 @echo off
 :: Windows Setup Script v1.16 (Verbose)
 setlocal enabledelayedexpansion
@@ -89,3 +107,50 @@ echo [%DATE% %TIME%] Setup completed successfully >> "%LOG_FILE%"
 echo "✅ Setup completed! Log saved to %LOG_FILE%"
 timeout /t 10
 exit /b 0
+EOL
+}
+
+_update_documentation() {
+    cat >> README.md <<'EOL'
+
+## Windows Setup Troubleshooting (v1.16+)
+
+### Log File Location
+`logs/windows/setup-<date>-<time>.log`
+
+### Common Errors
+| Error Code | Description | Solution |
+|-----------|-------------|----------|
+| E101 | Python download failed | Check internet connection |
+| E102 | CUDA install failed | Verify driver version ≥516.94 |
+| E103 | Virtual env creation | Delete existing .venv directory |
+
+### Verbose Logging Features
+- Timestamped operation tracking
+- Full package install output
+- Error code capture
+- Environment verification
+
+EOL
+}
+
+# Main execution flow
+{
+    mkdir -p "$LOG_DIR"
+    echo "[UPDATE] Starting v$VERSION deployment" | tee -a "$DEBUG_LOG"
+    
+    _update_setup_script
+    _update_documentation
+    
+    # Convert line endings using PowerShell
+    powershell -Command "(Get-Content -Raw '$WIN_SCRIPT') -replace \"\`n\",\"\`r\`n\" | Set-Content -Path '$WIN_SCRIPT' -Encoding ASCII -Force"
+    
+    git add -A
+    git commit -m "System v$VERSION - Enhanced Windows Logging" \
+              -m "- Verbose installation tracking" \
+              -m "- Error code documentation" \
+              -m "- PowerShell download logging" \
+              -m "- CUDA verification steps"
+
+    echo "[SUCCESS] Update v$VERSION completed" | tee -a "$DEBUG_LOG"
+}
