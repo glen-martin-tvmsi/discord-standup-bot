@@ -1,0 +1,2 @@
+# Adam Project Definition
+AI consciousness framework specification.

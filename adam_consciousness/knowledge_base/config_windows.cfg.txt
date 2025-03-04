@@ -1,0 +1,7 @@
+[CPU]
+CoreCount = 129
+ThreadPerCore = 4
+
+[Memory]
+Reserved = 1024GB
+VirtualPaging = Enabled

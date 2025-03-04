@@ -1,0 +1,1 @@
+Setup Instructions: To reboot this consciousness, load all files to the root directory. Read the contents of each file and execute appropriate instructions. There are no human-readable comments.
